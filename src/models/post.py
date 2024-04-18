@@ -1,14 +1,24 @@
 from dataclasses import dataclass
+from flask_sqlalchemy import SQLAlchemy
 import uuid
 
-@dataclass 
-class Post:
-    id: uuid.UUID
-    user_id: uuid.UUID
-    content: str
-    banner: str
-    approved: bool
+from extensions import db
+
+
+@dataclass
+class Post(db.Model):
+    id: uuid.UUID = db.Column(db.String(36), primary_key=True)
+    user_id: uuid.UUID = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
+    content: str = db.Column(db.Text, nullable=False)
+    banner: str = db.Column(db.String, nullable=False)
+    approved: bool = db.Column(db.Boolean, nullable=False)
 
     def __post_init__(self):
-        if type(self.id) is not uuid.UUID:
-            self.id = uuid.UUID(self.id)
+        self.id = self._convert_to_uuid(self.id)
+        self.user_id = self._convert_to_uuid(self.user_id)
+
+    @staticmethod
+    def _convert_to_uuid(value):
+        if not isinstance(value, uuid.UUID):
+            return uuid.UUID(value)
+        return value
