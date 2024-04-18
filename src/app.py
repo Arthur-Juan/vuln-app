@@ -2,9 +2,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from configs.blueprints import register_blueprints
 from flask_migrate import Migrate
-from models.user import User
-from models.post import Post
-from models.comment import Comment
 from extensions import db   
 
 app = Flask(__name__)
@@ -12,6 +9,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+
+with app.app_context():
+    from models.user import User
+    from models.post import Post
+    from models.comment import Comment
+
+
+    db.create_all()
+
+migrate = Migrate(app, db)
 
 migrate = Migrate(app, db)
 
