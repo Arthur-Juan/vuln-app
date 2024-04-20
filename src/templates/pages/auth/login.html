@@ -1,0 +1,64 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<form id="login">
+   
+    <!-- Email input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="email" id="email" name="email" class="form-control" />
+        <label class="form-label" for="email">Email address</label>
+    </div>
+    <!-- Password input -->
+    <div data-mdb-input-init class="form-outline mb-4">
+        <input type="password" id="password"  name="password" class="form-control" />
+        <label class="form-label" for="password">Password</label>
+    </div>
+   
+    <!-- Submit button -->
+    <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign In</button>
+
+    <!-- Register buttons -->
+    <div class="text-center">
+        <p>Not a member? <a href="/register">Sign Up</a></p>
+    </div>
+</form>
+
+<script>
+    let form = document.querySelector("#login");
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const input = {};
+        formData.forEach((value, key) => {
+            input[key] = value;
+        });
+       
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(input)
+            });
+            
+            if (response.ok) {
+                // Successful response
+                let redirectUrl = response.url
+                if (redirectUrl){
+                    window.location.href = redirectUrl; 
+                }
+           
+            } else {
+                // Handle other error cases
+                throw new Error('Network response was not ok');
+            }
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    });
+
+</script>
+{% endblock %}

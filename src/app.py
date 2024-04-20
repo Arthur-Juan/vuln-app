@@ -7,6 +7,7 @@ from extensions import db
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'bfc5221616fd29387d7413aeb41401391dceefa8'
 
 db.init_app(app)
 
@@ -20,7 +21,6 @@ with app.app_context():
 
 migrate = Migrate(app, db)
 
-migrate = Migrate(app, db)
 
 
 register_blueprints(app)
