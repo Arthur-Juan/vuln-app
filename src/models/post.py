@@ -7,10 +7,10 @@ from extensions import db
 
 @dataclass
 class Post(db.Model):
-    id: uuid.UUID = db.Column(db.String(36), primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id: uuid.UUID = db.Column(db.String(36), db.ForeignKey('user.id'), nullable=False)
     content: str = db.Column(db.Text, nullable=False)
-    banner: str = db.Column(db.String, nullable=False)
+    banner: str = db.Column(db.String, nullable=True)
     approved: bool = db.Column(db.Boolean, nullable=False)
 
     def __post_init__(self):

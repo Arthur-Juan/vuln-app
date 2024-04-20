@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from configs.blueprints import register_blueprints
 from flask_migrate import Migrate
 from extensions import db   
+from services import database
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
@@ -21,6 +22,7 @@ with app.app_context():
 
 migrate = Migrate(app, db)
 
+database.seed(db, app)
 
 
 register_blueprints(app)
