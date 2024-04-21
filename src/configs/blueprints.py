@@ -1,10 +1,13 @@
 from flask import Flask
-from controllers.home_controller import home_controller
-from controllers.auth_controller import auth_controller
+import controllers
+import controllers.auth_controller
+import controllers.home_controller
+import controllers.posts_controller
 
 def register_blueprints(app: Flask) -> None:
     try:
-        app.register_blueprint(home_controller)
-        app.register_blueprint(auth_controller)
+        app.register_blueprint(controllers.home_controller.home_controller)
+        app.register_blueprint(controllers.auth_controller.auth_controller)
+        app.register_blueprint(controllers.posts_controller.posts_controller)
     except Exception as e:
         raise e
