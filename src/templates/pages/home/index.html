@@ -1,19 +1,69 @@
 {% extends 'base.html' %}
-
 {% block content %}
+<style>
+   .shadow-custom {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .25), 0 3px 10px 5px rgba(0, 0, 0, 0.05) !important;
+    padding: 16px;
+    margin: 16px;
+  } 
+</style>
     
-    {% for post in posts %}
+<div class="">
+    Make your post!
+<form action="/posts" method="post">
+    
+    <div class="form-outline shadow-custom " data-mdb-input-init>
+        <input type="title" name="title">
+        <textarea class="form-control" id="textAreaExample" name="content" rows="4"></textarea>
+        <label class="form-label" for="textAreaExample">Message</label>
+    </div>
+    <button type="submit" class="btn btn-success">Send</button>
+</form>
+</div>
+    
+    Other posts
+    {% for post in posts.items %}
     <li>
 
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">{{post.title}}</h5>
                 <p class="card-text">{{post.content}}</p>
-                <button type="button" class="btn btn-primary" data-mdb-ripple-init>Button</button>
+                <a  class="btn btn-primary" data-mdb-ripple-init href="/posts/{{post.id}}">view</a>
             </div>
         </div>
     </li>
     {% endfor %}
-
+    <div class="pagination">
+        {% if posts.has_prev %}
+            <span>
+                <a class='page-number' href="{{ url_for('index', page=posts.prev_num) }}">
+                    {{ '<<<' }}
+                </a>
+            </span>
+        {% endif %}
+    
+        {% for number in posts.iter_pages() %}
+            {% if posts.page != number %}
+                <span>
+                        <a class='page-number'
+                            href="{{ url_for('index', page=number) }}">
+                        {{ number }}
+                        </a>
+                </span>
+            {% else %}
+                <span class='current-page-number'>{{ number }}</span>
+            {% endif %}
+        {% endfor %}
+    
+        {% if posts.has_next %}
+            <span>
+                <a class='page-number'
+                    href="{{ url_for('index', page=posts.next_num) }}">
+                    {{ '>>>' }}
+                </a>
+            </span>
+        {% endif %}
+    </div>
 
 {% endblock %}
