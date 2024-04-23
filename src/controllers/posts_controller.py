@@ -7,7 +7,7 @@ posts_controller = Blueprint('posts', __name__, template_folder='templates', url
 
 
 @posts_controller.post("/")
-def make_post():
+def create_post():
     
     data = request.form
     title = data.get("title")
