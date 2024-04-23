@@ -41,5 +41,5 @@ def get_post(post_id):
         ), 401
     
     
-    return jsonify(post)
+    return render_template("pages/posts/detail.html", post=post)
     

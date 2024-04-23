@@ -1,4 +1,17 @@
-{% extends base.html %}
+{% extends 'base.html' %}
 
 {% block content %}
+
+    <div class="title">
+        {{post.title}}
+    </div>
+    <br>
+    <div class="content">
+        {{post.content|safe}}
+    </div>
+    <br>
+    Author: {{post.user.name}}
+    <hr>
+
+
 {% endblock %}
