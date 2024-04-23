@@ -53,4 +53,5 @@ def login():
     session["id"] = user.id
     session["email"] = user.email
     session["name"] = user.name
+    session["is_admin"] = user.is_admin
     return redirect("/")
