@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="/posts/{{post.id}}/edit" method="post">
+    <div class="title">
+        <input type="text" name="title" value="{{post.title}}">
+        
+    </div>
+    <br>
+    <div class="content">
+        <textarea type="text" name="content">
+            {{post.content}}
+            </textarea> 
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+    <br>
+</form>
+    Author: {{post.user.name}}
+    <hr>
+
+
+{% endblock %}

@@ -12,6 +12,8 @@
     <br>
     Author: {{post.user.name}}
     <hr>
-
+    {% if session_id == post.user.id %}
+        <a href="/posts/{{post.id}}/edit" class="btn btn-info">Editar</a>
+    {% endif %}
 
 {% endblock %}

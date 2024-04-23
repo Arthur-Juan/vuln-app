@@ -26,8 +26,8 @@ def create_post():
     return redirect(f"/posts/{post.id}")
 
 
-@posts_controller.get("/<post_id>")
-def get_post(post_id):
+@posts_controller.get("/<post_id>") 
+def get_post(post_id) -> str :
     post = Post.query.filter_by(id = post_id).first()
     if not post:
         return jsonify(
@@ -41,5 +41,33 @@ def get_post(post_id):
         ), 401
     
     
-    return render_template("pages/posts/detail.html", post=post)
+    return render_template("pages/posts/detail.html", post=post, session_id=session.get("id"))
     
+@posts_controller.get("/<post_id>/edit")
+def edit_post_view(post_id):
+    post = Post.query.filter_by(id = post_id).first()
+    if not post:
+        return jsonify(
+            {"message": "no post with this id"}
+        ), 404
+    
+    if session.get("id") != post.user_id:
+        return jsonify(
+            {"message": "you cannot view this post"}
+
+        ), 401
+    
+    
+    return render_template("pages/posts/edit.html", post=post, session_id=session.get("id"))
+    
+@posts_controller.post("/<post_id>/edit")
+def edit_post(post_id) -> str:
+    data = request.form
+    title = data.get("title")
+    content = data.get("content")
+
+    post = Post.query.filter_by(id = post_id).first()
+    post.title = title
+    post.content = content
+    db.session.commit()
+    return redirect(f"/posts/{post.id}")
