@@ -67,6 +67,8 @@ def edit_post(post_id) -> str:
     content = data.get("content")
 
     post = Post.query.filter_by(id = post_id).first()
+    if not post: 
+        return jsonify({"message": "post not found"}), 404
     post.title = title
     post.content = content
     db.session.commit()
