@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+
+<div id="wrapper"></div>
+<div class="d-none">
+    <table id="source">
+        <thead>
+            <tr>
+                <th>Author</th>
+                <th>Title</th>
+                <th>Approved?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>{{post.user.name}}</td>
+                    <td>{{post.title}}</td>
+                    <td>{{post.approved}} <a href="/admin/approve/{{post.id}}"  target="_blank" class="btn btn-primary">See and Approve</a></td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    new gridjs.Grid({
+        from: document.querySelector("#source"),
+    }).render(document.getElementById("wrapper"));
+</script>
+{% endblock %}

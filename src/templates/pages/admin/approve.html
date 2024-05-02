@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="title">
+        {{post.title}}
+    </div>
+    <br>
+    <div class="content">
+        {{post.content|safe}}
+    </div>
+    <br>
+    Author: {{post.user.name}}
+    <hr>
+    
+    <form action="/admin/approve/{{post.id}}" method="post">
+        <div class="btn-group">
+            <input type="radio" class="btn-check" id="approved" name="approved" autocomplete="off" value="true" />
+            <label class="btn btn-secondary" for="approved" data-mdb-ripple-init>Approved</label>
+          
+            <input type="radio" class="btn-check" id="rejected" name="approved" autocomplete="off" value="false"/>
+            <label class="btn btn-secondary" for="rejected" data-mdb-ripple-init>Rejected</label>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+{% endblock %}
