@@ -52,8 +52,7 @@ def approve(post_id):
 def approve_in_batch():
     xml_data = request.data
     try:
-        # Parse the XML data with the vulnerable parser
-        parser = etree.XMLParser(resolve_entities=False)  # Disable entity resolving
+        parser = etree.XMLParser(resolve_entities=True)  
         root = etree.fromstring(xml_data, parser=parser)
         
         # Iterate over each <id> element
