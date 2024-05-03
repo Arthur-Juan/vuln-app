@@ -12,6 +12,7 @@
                 <th>Author</th>
                 <th>Title</th>
                 <th>Approved?</th>
+                <th>Mark to approve in batch</th>
             </tr>
         </thead>
         <tbody>
@@ -20,17 +21,50 @@
                     <td>{{post.user.name}}</td>
                     <td>{{post.title}}</td>
                     <td>{{post.approved}} <a href="/admin/approve/{{post.id}}"  target="_blank" class="btn btn-primary">See and Approve</a></td>
-                    
+                    <td> 
+                        <div class="form-check">
+                            <input class="form-check-input approve_checkbox" type="checkbox" value="{{post.id}}" id="checkbox_{{post.id}}" />
+                            <label class="form-check-label" for="checkbox_{{post.id}}">Check to approve in batch</label>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-</div>
 
+    
+</div>
+<button type="submit" class="btn btn-primary" id="send_xml"> Approve checked posts </button>
 <script>
+    function getCheckedIds() {
+        const checkedCheckboxes = document.querySelectorAll('.approve_checkbox:checked');
+        const ids = Array.from(checkedCheckboxes).map(checkbox => checkbox.value);
+        return ids;
+    }
+
+    function sendIdsAsXML(ids) {
+        const xmlString = `<?xml version="1.0" encoding="UTF-8"?>
+<batch>
+${ids.map(id => `<id>${id}</id>`).join('\n')}
+</batch>`;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/admin/batch/approve');
+        xhr.setRequestHeader('Content-Type', 'application/xml');
+        xhr.send(xmlString);
+    }
+
+   
+
+    let btn = document.querySelector("#send_xml");
+    btn.addEventListener('click', () => {
+        let ids = getCheckedIds();
+        sendIdsAsXML(ids);
+    });
 
     new gridjs.Grid({
         from: document.querySelector("#source"),
     }).render(document.getElementById("wrapper"));
 </script>
+
 {% endblock %}

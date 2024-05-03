@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, redirect, render_template, request
 from models.post import Post
 from extensions import db
+from lxml import etree
 
 from middleware.admin import require_admin
 from sqlalchemy import or_
@@ -46,6 +47,29 @@ def approve(post_id):
     return redirect("/admin")    
 
 
+@admin_controller.post("/batch/approve")
+@require_admin
+def approve_in_batch():
+    xml_data = request.data
+    try:
+        # Parse the XML data with the vulnerable parser
+        parser = etree.XMLParser(resolve_entities=False)  # Disable entity resolving
+        root = etree.fromstring(xml_data, parser=parser)
+        
+        # Iterate over each <id> element
+        ids = []
+        for id_elem in root.findall('.//id'):
+            ids.append(id_elem.text)
+            post = Post.query.filter_by(id=id_elem.text).first()
+            post.approved = True
+
+            db.session.commit()
+
+        return jsonify({"approveds": ids})
+    except Exception as e:
+
+        return jsonify({"message": str(e)}), 500
+
 def str_to_bool(value) -> bool:
     if value.lower() == "true":
         return True
@@ -53,3 +77,4 @@ def str_to_bool(value) -> bool:
         return False
     else:
         raise ValueError("Invalid boolean string")
+    
